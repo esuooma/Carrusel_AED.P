@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Proyecto_Carrusel.Modelos
+namespace Carrusel_AED.P.Modelos
 {
     public class Registro
     {                 // constructor, con atributos de la clase registro 

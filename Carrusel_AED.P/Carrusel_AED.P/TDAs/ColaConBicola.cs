@@ -1,10 +1,16 @@
 ﻿using System;
 
-namespace Proyecto_Carrusel.TDAS
+namespace Carrusel_AED.P.TDAs
 {
     public class ColaConBicola<T>
     {
         private Bicola<T> bicolaInterna;
+
+        public int contador
+        {
+            get { return bicolaInterna.contador; }
+        }
+
         public ColaConBicola()
         {
             bicolaInterna = new Bicola<T>();

@@ -1,7 +1,7 @@
 ﻿using System;
 // TDA espejo de la pila implementada con una bicola.
 
-namespace Proyecto_Carrusel.TDAS
+namespace Carrusel_AED.P.TDAs
 {
     public class PilaConBicola<T>
     {

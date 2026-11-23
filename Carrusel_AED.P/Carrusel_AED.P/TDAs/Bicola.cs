@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Proyecto_Carrusel.TDAS
+namespace Carrusel_AED.P.TDAs
 {
     public class Bicola<T>
     {

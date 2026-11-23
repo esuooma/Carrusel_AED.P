@@ -1,78 +1,88 @@
-﻿using System;
+﻿using Carrusel_AED.P.Modelos;
+using Carrusel_AED.P.TDAs;
+using System;
 using System.Text;
-using Proyecto_Carrusel.TDAS;
-using Proyecto_Carrusel.Modelos;
 
-namespace Proyecto_Carrusel.Logica
+namespace Carrusel_AED.P.Logica
 {
     public class Extractor
     {
         public Registro ExtraerRegistro(string linea)
         {
-            string textoId = "";
-            string textoCanal = "";
-            string textoOperacion = "";
-            string textoPayload = "";
+            string id = "000";
+            int canal = 1; // Por defecto
+            string operacion = "DESCONOCIDA";
+            string payload = "";
 
-            // Usamos la Pila para el balanceo y StringBuilder para armar el texto
+            // Usamos la Pila con Bicola como pide el PDF
             PilaConBicola<char> pila = new PilaConBicola<char>();
             StringBuilder sb = new StringBuilder();
 
-            // Variable para saber qué estamos leyendo en este momento
+            // Variable para saber qué estamos leyendo
             char enBloque = ' ';
+            bool leyendoOperacion = false;
 
-            foreach (char p in linea)
+            foreach (char c in linea)
             {
-                // 1. Si es un símbolo de apertura, lo apilamos y marcamos el bloque
-                if (p == '[' || p == '(' || p == '{')
+                if (c == '[' || c == '(' || c == '{')
                 {
-                    pila.Apilar(p);
-                    enBloque = p;
-                    sb.Clear(); // Empezamos a guardar texto limpio
+                    pila.Apilar(c);
+                    enBloque = c;
+                    sb.Clear();
                 }
-                // 2. Si es un símbolo de cierre, desapilamos y guardamos lo extraído
-                else if (p == ']' || p == ')' || p == '}')
+                else if (c == ']' || c == ')' || c == '}')
                 {
-                    char apertura = pila.DesApilar(); // Aquí validas que haga match
+                    // Desapilamos de forma segura
+                    if (!pila.vacia()) pila.DesApilar();
 
-                    string textoLimpio = sb.ToString().Trim();
+                    string texto = sb.ToString().Trim();
 
-                    // Dependiendo del bloque del que salimos, asignamos los datos
+                    // Dependiendo de qué bloque cerramos, guardamos el dato
                     if (enBloque == '[')
                     {
-                        // Aquí viene el ID, canal y operacion separados por comas
-                        // Ejemplo: id:001, canal:1, operacion:AUDIO
-                        // (Para simplificar, separamos por comas)
-                        string[] partes = textoLimpio.Split(',');
-                        foreach (string parte in partes)
-                        {
-                            if (parte.Contains("id:")) textoId = parte.Replace("id:", "").Trim();
-                            if (parte.Contains("canal:")) textoCanal = parte.Replace("canal:", "").Trim();
-                            if (parte.Contains("operacion:")) textoOperacion = parte.Replace("operacion:", "").Trim();
-                        }
+                        // Asumimos que adentro del corchete viene el CANAL
+                        int.TryParse(texto, out canal);
+                    }
+                    else if (enBloque == '(')
+                    {
+                        // Asumimos que adentro del paréntesis viene el ID
+                        id = texto;
                     }
                     else if (enBloque == '{')
                     {
-                        textoPayload = textoLimpio; // El texto del mensaje
+                        // Adentro de las llaves viene el PAYLOAD (Mensaje)
+                        payload = texto;
                     }
 
-                    enBloque = ' '; // Terminó el bloque
+                    enBloque = ' '; // Reiniciamos el bloque
                 }
-                // 3. Si no es un delimitador, guardamos el texto interno
+                else if (c == '<')
+                {
+                    // Si abre el símbolo de operación
+                    leyendoOperacion = true;
+                    sb.Clear();
+                }
+                else if (c == '>')
+                {
+                    // Si cierra el símbolo de operación
+                    operacion = sb.ToString().Trim();
+                    leyendoOperacion = false;
+                }
                 else
                 {
+                    // Si no es un delimitador, guardamos la letra
                     if (enBloque != ' ')
                     {
-                        sb.Append(p);
+                        sb.Append(c);
+                    }
+                    else if (leyendoOperacion)
+                    {
+                        sb.Append(c);
                     }
                 }
             }
 
-            // Convertimos el canal a entero para el Registro
-            int canalFinal = int.TryParse(textoCanal, out int c) ? c : 1;
-
-            return new Registro(textoId, canalFinal, textoOperacion, textoPayload);
+            return new Registro(id, canal, operacion, payload);
         }
     }
 }
-
