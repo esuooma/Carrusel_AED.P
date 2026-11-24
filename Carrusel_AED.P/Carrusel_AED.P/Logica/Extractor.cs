@@ -9,6 +9,10 @@ namespace Carrusel_AED.P.Logica
     {
         public Registro ExtraerRegistro(string linea)
         {
+            if (string.IsNullOrEmpty(linea))
+            {
+                return new Registro("000", 1, "DESCONOCIDA", "");
+            }
             string id = "000";
             int canal = 1; // Por defecto
             string operacion = "DESCONOCIDA";
@@ -35,7 +39,7 @@ namespace Carrusel_AED.P.Logica
                     // Desapilamos de forma segura
                     if (!pila.vacia()) pila.DesApilar();
 
-                    string texto = sb.ToString().Trim();
+                    string texto = sb.ToString().Trim().ToUpper();
 
                     // Dependiendo de qué bloque cerramos, guardamos el dato
                     if (enBloque == '[')
@@ -65,7 +69,7 @@ namespace Carrusel_AED.P.Logica
                 else if (c == '>')
                 {
                     // Si cierra el símbolo de operación
-                    operacion = sb.ToString().Trim();
+                    operacion = sb.ToString().Trim().ToUpper();
                     leyendoOperacion = false;
                 }
                 else

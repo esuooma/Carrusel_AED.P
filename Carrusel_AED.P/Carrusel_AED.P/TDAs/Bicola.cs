@@ -23,6 +23,7 @@ namespace Carrusel_AED.P.TDAs
         public void InsertarFinal(T dato)
         {
             Nodo<T> nuevo = new Nodo<T>(dato);
+
             if (vacia())
             {
                 Frente = nuevo;
@@ -30,8 +31,8 @@ namespace Carrusel_AED.P.TDAs
             }
             else
             {
-                Final.siguiente = nuevo;
-                nuevo.anterior = Final;
+                Final.Siguiente = nuevo;
+                nuevo.Anterior = Final;
                 Final = nuevo;
             }
             contador++;
@@ -49,8 +50,8 @@ namespace Carrusel_AED.P.TDAs
             }
             else
             {
-                nuevo.siguiente = Frente;
-                Frente.anterior = nuevo;
+                nuevo.Siguiente = Frente;
+                Frente.Anterior = nuevo;
                 Frente = nuevo;
             }
             contador++;
@@ -60,18 +61,24 @@ namespace Carrusel_AED.P.TDAs
         {
             if (vacia()) return default(T);
 
-            T dato = Frente.dato;
-            if (Frente == Final) //queda un elemento
+            // 1. Guardamos el dato del nodo que está al frente
+            T dato = Frente.Dato;
+
+            if (Frente == Final) // Si solo queda un elemento
             {
                 Frente = null;
                 Final = null;
             }
             else
             {
-                Frente = Frente.siguiente;
-                Frente.anterior = null;
+                // 2. Movemos el frente al siguiente nodo
+                Frente = Frente.Siguiente;
+                Frente.Anterior = null;
             }
+
             contador--;
+
+            // 3. Retornamos el dato que guardamos al principio
             return dato;
         }
 
@@ -80,7 +87,7 @@ namespace Carrusel_AED.P.TDAs
         {
             if (vacia()) return default(T);
 
-            T dato = Final.dato;
+            T dato = Final.Dato;
             if (Frente == Final)
             {
                 Frente = null;
@@ -88,8 +95,8 @@ namespace Carrusel_AED.P.TDAs
             }
             else
             {
-                Final = Final.anterior;
-                Final.siguiente = null;
+                Final = Final.Anterior;
+                Final.Siguiente = null;
             }
             contador--;
             return dato;

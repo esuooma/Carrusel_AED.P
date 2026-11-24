@@ -1,6 +1,8 @@
-﻿using System;
-using Carrusel_AED.P.Modelos;
+﻿using Carrusel_AED.P.Modelos;
 using Carrusel_AED.P.TDAs;
+using System;
+using System.Linq.Expressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Carrusel_AED.P.Logica
 {
@@ -27,31 +29,33 @@ namespace Carrusel_AED.P.Logica
 
             Extractor extractor = new Extractor();
             string[] lineas = contenidoArchivo.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
-
+            int error = 0; 
             int contadorCanal1 = 0;
             int contadorCanal2 = 0;
             int contadorCanal3 = 0;
 
             foreach (string linea in lineas)
             {
-                Registro reg = extractor.ExtraerRegistro(linea);
-
-                if (reg.Canal == 1)
+                try
                 {
-                    Canal1.Encolar(reg);
-                    contadorCanal1++;
+                    Registro reg = extractor.ExtraerRegistro(linea);
+                    if (reg.Canal == 1) Canal1.Encolar(reg);
+                    else if (reg.Canal == 2) Canal2.Encolar(reg);
+                    else Canal3.Encolar(reg);
                 }
-                else if (reg.Canal == 2)
+                catch (Exception)
                 {
-                    Canal2.Encolar(reg);
-                    contadorCanal2++;
+                    error++;
                 }
-                else
-                {
-                    Canal3.Encolar(reg);
-                    contadorCanal3++;
-                }
+                
+            }
+            if (error > 0)
+            {
+                System.Windows.Forms.MessageBox.Show("Hubo " + error + " errores al procesar líneas. Revisa el formato del TXT.");
             }
         }
+       
     }
+   
 }
+

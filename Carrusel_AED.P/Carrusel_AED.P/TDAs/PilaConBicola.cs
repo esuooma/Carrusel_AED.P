@@ -7,6 +7,11 @@ namespace Carrusel_AED.P.TDAs
     {
         private Bicola<T> bicolaInterna;
 
+        public int contador
+        {
+            get { return bicolaInterna.contador; }
+        }
+
         public PilaConBicola()
         {
             bicolaInterna = new Bicola<T>();

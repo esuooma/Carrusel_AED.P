@@ -1,13 +1,13 @@
-﻿
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Numerics;
 using System.Text;
 using System.Windows.Forms;
 using Carrusel_AED.P.Logica;
-using Carrusel_AED.P.TDAs;  
+using Carrusel_AED.P.TDAs;
 
 namespace Carrusel_AED.P
 {
@@ -34,10 +34,18 @@ namespace Carrusel_AED.P
 
             // Botón 2: Procesar
             Button btnProcesar = new Button();
-            btnProcesar.Text = "2. Extraer y Encolar";
+            btnProcesar.Text = "Fase.2";
             btnProcesar.Location = new System.Drawing.Point(150, 20);
             btnProcesar.Click += (s, e) => ProcesarYEncolar();
             this.Controls.Add(btnProcesar);
+
+            // Botón 3: Round Robin
+            Button btnRoundRobin = new Button();
+            btnRoundRobin.Text = "Fase.3";
+            btnRoundRobin.Location = new System.Drawing.Point(300, 20);
+            btnRoundRobin.Click += (s, e) => EjecutarRoundRobin();
+            this.Controls.Add(btnRoundRobin);
+
         }
 
         private void CargarArchivo()
@@ -67,13 +75,29 @@ namespace Carrusel_AED.P
 
             // Mostramos el resultado (Así se concatenan strings sin errores)
             string mensaje = "Procesamiento completo:\n" +
-                             "Canal 1: " + Gestor.Canal1.contador + " registros.\n" +
-                             "Canal 2: " + Gestor.Canal2.contador + " registros.\n" +
-                             "Canal 3: " + Gestor.Canal3.contador + " registros.";
+                             "Canal 1: " + Gestor.Canal1.Contador + " registros.\n" +
+                             "Canal 2: " + Gestor.Canal2.Contador + " registros.\n" +
+                             "Canal 3: " + Gestor.Canal3.Contador + " registros.";
 
             MessageBox.Show(mensaje, "Resumen");
+
+
+        }
+
+        private void EjecutarRoundRobin()
+        {
+            // 1. Limpiamos todo y llenamos de nuevo
+            Gestor = new GestorTransmisiones();
+            Gestor.ProcesarTexto(contenidoArchivoCompleto);
+
+            MessageBox.Show("Canales listos. C1: " + Gestor.Canal1.Contador + ", C2: " + Gestor.Canal2.Contador);
+
+            // 2. Ejecutamos
+            RoundRobin simulador = new RoundRobin();
+            simulador.EjecutarSimulacion(Gestor.Canal1, Gestor.Canal2, Gestor.Canal3);
+
+            // 3. Resultado
+            MessageBox.Show("Guardados: " + simulador.ColaGuardado.Contador + " | Eliminados: " + simulador.ColaEliminados.Contador);
         }
     }
 }
-
-
