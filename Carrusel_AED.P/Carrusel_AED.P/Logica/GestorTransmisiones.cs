@@ -8,7 +8,7 @@ namespace Carrusel_AED.P.Logica
 {
     public class GestorTransmisiones
     {
-        // Estas son las 3 colas que el Frontend podrá consultar
+        // Estas son las 3 colas para los canalaes 
         public ColaConBicola<Registro> Canal1 { get; private set; }
         public ColaConBicola<Registro> Canal2 { get; private set; }
         public ColaConBicola<Registro> Canal3 { get; private set; }
@@ -30,9 +30,7 @@ namespace Carrusel_AED.P.Logica
             Extractor extractor = new Extractor();
             string[] lineas = contenidoArchivo.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
             int error = 0; 
-            int contadorCanal1 = 0;
-            int contadorCanal2 = 0;
-            int contadorCanal3 = 0;
+            
 
             foreach (string linea in lineas)
             {

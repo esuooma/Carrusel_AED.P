@@ -18,7 +18,7 @@ namespace Carrusel_AED.P.Logica
             string operacion = "DESCONOCIDA";
             string payload = "";
 
-            // Usamos la Pila con Bicola como pide el PDF
+            // Usamos la Pila con Bicola 
             PilaConBicola<char> pila = new PilaConBicola<char>();
             StringBuilder sb = new StringBuilder();
 

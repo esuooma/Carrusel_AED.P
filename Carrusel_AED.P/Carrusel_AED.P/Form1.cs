@@ -15,6 +15,8 @@ namespace Carrusel_AED.P
     {
         private string contenidoArchivoCompleto;
 
+        private RoundRobin SimuladorGlobal; 
+
         private GestorTransmisiones Gestor = new GestorTransmisiones();
 
         public Form1()
@@ -46,6 +48,50 @@ namespace Carrusel_AED.P
             btnRoundRobin.Click += (s, e) => EjecutarRoundRobin();
             this.Controls.Add(btnRoundRobin);
 
+            // Botón 4: Destruir
+            Button btnDestruir = new Button();
+            btnDestruir.Text = "4. Destruir Eliminados";
+            btnDestruir.Location = new System.Drawing.Point(450, 20); 
+            btnDestruir.Click += (s, e) => {
+
+                if (SimuladorGlobal == null)
+                {
+                    MessageBox.Show("Primero ejecuta el Round Robin (Botón 3).");
+                    return;
+                }
+
+                // Mostramos la lista de eliminados
+                string lista = SimuladorGlobal.ObtenerListaEliminados();
+
+                // Pedimos confirmación
+                DialogResult result = MessageBox.Show(lista + "\n\n¿Confirmas la destrucción de estos registros?", "Confirmación de Destrucción", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (result == DialogResult.Yes)
+                {
+                    SimuladorGlobal.ConfirmarDestruccion();
+                    MessageBox.Show("Registros destruidos correctamente.");
+                }
+            };
+            this.Controls.Add(btnDestruir);
+
+            //fase 5 boton armar pagina
+            Button btnFase5 = new Button();
+            btnFase5.Text = "5. Armar Páginas";
+            btnFase5.Location = new System.Drawing.Point(600, 20);
+            btnFase5.Click += (s, e) =>
+            {
+                if (SimuladorGlobal == null)
+                {
+                    MessageBox.Show("Primero haz el RoundRobin.");
+                    return;
+                }
+
+                StoryBuilder builder = new StoryBuilder();
+                builder.ConstruirHistoria(SimuladorGlobal.ColaGuardado);
+
+                MessageBox.Show("Se armaron " + builder.BicolaPaginas.contador + " páginas.", "Fase 5");
+            };
+            this.Controls.Add(btnFase5);
         }
 
         private void CargarArchivo()
@@ -70,10 +116,10 @@ namespace Carrusel_AED.P
                 return;
             }
 
-            // Le pasamos el texto a tu Cerebro (GestorTransmisiones)
+            // Le pasamos el texto a (GestorTransmisiones)
             Gestor.ProcesarTexto(contenidoArchivoCompleto);
 
-            // Mostramos el resultado (Así se concatenan strings sin errores)
+            // Mostramos el resultado 
             string mensaje = "Procesamiento completo:\n" +
                              "Canal 1: " + Gestor.Canal1.Contador + " registros.\n" +
                              "Canal 2: " + Gestor.Canal2.Contador + " registros.\n" +
@@ -86,18 +132,15 @@ namespace Carrusel_AED.P
 
         private void EjecutarRoundRobin()
         {
-            // 1. Limpiamos todo y llenamos de nuevo
+            // Limpiamos todo y llenamos de nuevo
             Gestor = new GestorTransmisiones();
             Gestor.ProcesarTexto(contenidoArchivoCompleto);
 
-            MessageBox.Show("Canales listos. C1: " + Gestor.Canal1.Contador + ", C2: " + Gestor.Canal2.Contador);
+            //Fase 4
+            SimuladorGlobal = new RoundRobin();
+            SimuladorGlobal.EjecutarSimulacion(Gestor.Canal1, Gestor.Canal2, Gestor.Canal3);
 
-            // 2. Ejecutamos
-            RoundRobin simulador = new RoundRobin();
-            simulador.EjecutarSimulacion(Gestor.Canal1, Gestor.Canal2, Gestor.Canal3);
-
-            // 3. Resultado
-            MessageBox.Show("Guardados: " + simulador.ColaGuardado.Contador + " | Eliminados: " + simulador.ColaEliminados.Contador);
+            MessageBox.Show("Guardados " + SimuladorGlobal.ColaGuardado.Contador + " | Eliminados: " + SimuladorGlobal.ColaEliminados.Contador, "completado! ");
         }
     }
 }

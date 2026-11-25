@@ -1,6 +1,7 @@
 ﻿using Carrusel_AED.P.Modelos;
 using Carrusel_AED.P.TDAs;
 using System;
+using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 
 namespace Carrusel_AED.P.Logica
@@ -16,7 +17,7 @@ namespace Carrusel_AED.P.Logica
             ColaEliminados = new ColaConBicola<Registro>();
         }
 
-        // Ahora el método recibe las colas DIRECTAMENTE aquí
+        // recibe las colas para mostrar el contenido descartable y guardado
         public void EjecutarSimulacion(ColaConBicola<Registro> canal1, ColaConBicola<Registro> canal2, ColaConBicola<Registro> canal3)
         {
             int turno = 1;
@@ -29,7 +30,7 @@ namespace Carrusel_AED.P.Logica
                 vueltasSeguridad++;
                 Registro registroActual = null;
 
-                // Intentamos sacar del canal 1
+                // Intentamos sacar los canales
                 if (turno == 1)
                 {
                     registroActual = canal1.DesEncolar();
@@ -97,6 +98,40 @@ namespace Carrusel_AED.P.Logica
             while (pilaAux.contador > 0)
             {
                 ColaGuardado.Encolar(pilaAux.DesApilar());
+            }
+        }
+
+    public string ObtenerListaEliminados()
+        {
+            if (ColaEliminados.vacia())
+                return "No hay registros para destruir. ";
+
+            string reporte = " Registros a destruir : \n\n";
+
+            ColaConBicola<Registro> colaCopia = new ColaConBicola<Registro>();
+
+            while (!ColaEliminados.vacia())
+            {
+                Registro reg = ColaEliminados.DesEncolar();
+                reporte += "ID: " + reg.Id + "| Operacion: " + reg.Operacion + "| canal:" + reg.Canal + "\n";
+
+                colaCopia.Encolar(reg);
+            }
+
+                while (!colaCopia.vacia())
+                {
+                ColaEliminados.Encolar(colaCopia.DesEncolar());
+                }
+
+                return reporte;
+            }
+        
+
+        public void ConfirmarDestruccion()
+        {
+            while (!ColaEliminados.vacia())
+            {
+                ColaEliminados.DesEncolar();
             }
         }
     }
