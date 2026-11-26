@@ -23,6 +23,7 @@ namespace Carrusel_AED.P.Modelos
 
             try
             {
+                string base64Limpio = base64.Replace("\n", "").Replace("\r", "");
                 byte[] bytes = System.Convert.FromBase64String(base64);
                 using (var ms = new MemoryStream(bytes))
                 {
@@ -33,7 +34,10 @@ namespace Carrusel_AED.P.Modelos
                     }
                 }
             }
-            catch { ImagenActual = null; }
+            catch (Exception ex)
+            {
+                ImagenActual = null;
+            }
         }
     }
 }

@@ -2,12 +2,14 @@
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.Eventing.Reader;
+using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
 using System.Numerics;
 using System.Text;
 using System.Windows.Forms;
 using Carrusel_AED.P.Logica;
 using Carrusel_AED.P.TDAs;
+using Carrusel_AED.P.Modelos;
 
 namespace Carrusel_AED.P
 {
@@ -15,7 +17,9 @@ namespace Carrusel_AED.P
     {
         private string contenidoArchivoCompleto;
 
-        private RoundRobin SimuladorGlobal; 
+        private RoundRobin SimuladorGlobal;
+
+        private StoryBuilder builderGlobal;
 
         private GestorTransmisiones Gestor = new GestorTransmisiones();
 
@@ -30,29 +34,42 @@ namespace Carrusel_AED.P
             // Botón 1: Leer
             Button btnCargar = new Button();
             btnCargar.Text = "1. Cargar TXT";
-            btnCargar.Location = new System.Drawing.Point(20, 20);
+            btnCargar.Location = new System.Drawing.Point(135, 20);
+            btnCargar.BackColor = System.Drawing.Color.FromArgb(50, 50, 50);
+            btnCargar.ForeColor = System.Drawing.Color.White;
+            btnCargar.FlatStyle = FlatStyle.Flat;
             btnCargar.Click += (s, e) => CargarArchivo();
             this.Controls.Add(btnCargar);
 
             // Botón 2: Procesar
             Button btnProcesar = new Button();
             btnProcesar.Text = "Fase.2";
-            btnProcesar.Location = new System.Drawing.Point(150, 20);
+            btnProcesar.Location = new System.Drawing.Point(255, 20);
+            btnProcesar.BackColor = System.Drawing.Color.FromArgb(50, 50, 50);
+            btnProcesar.ForeColor = System.Drawing.Color.White;
+            btnProcesar.FlatStyle = FlatStyle.Flat;
             btnProcesar.Click += (s, e) => ProcesarYEncolar();
             this.Controls.Add(btnProcesar);
 
             // Botón 3: Round Robin
             Button btnRoundRobin = new Button();
             btnRoundRobin.Text = "Fase.3";
-            btnRoundRobin.Location = new System.Drawing.Point(300, 20);
+            btnRoundRobin.Location = new System.Drawing.Point(375, 20);
+            btnRoundRobin.BackColor = System.Drawing.Color.FromArgb(50, 50, 50);
+            btnRoundRobin.ForeColor = System.Drawing.Color.White;
+            btnRoundRobin.FlatStyle = FlatStyle.Flat;
             btnRoundRobin.Click += (s, e) => EjecutarRoundRobin();
             this.Controls.Add(btnRoundRobin);
 
             // Botón 4: Destruir
             Button btnDestruir = new Button();
             btnDestruir.Text = "4. Destruir Eliminados";
-            btnDestruir.Location = new System.Drawing.Point(450, 20); 
-            btnDestruir.Click += (s, e) => {
+            btnDestruir.Location = new System.Drawing.Point(495, 20);
+            btnDestruir.BackColor = System.Drawing.Color.FromArgb(50, 50, 50);
+            btnDestruir.ForeColor = System.Drawing.Color.White;
+            btnDestruir.FlatStyle = FlatStyle.Flat;
+            btnDestruir.Click += (s, e) =>
+            {
 
                 if (SimuladorGlobal == null)
                 {
@@ -77,7 +94,10 @@ namespace Carrusel_AED.P
             //fase 5 boton armar pagina
             Button btnFase5 = new Button();
             btnFase5.Text = "5. Armar Páginas";
-            btnFase5.Location = new System.Drawing.Point(600, 20);
+            btnFase5.Location = new System.Drawing.Point(615, 20);
+            btnFase5.BackColor = System.Drawing.Color.FromArgb(50, 50, 50);
+            btnFase5.ForeColor = System.Drawing.Color.White;
+            btnFase5.FlatStyle = FlatStyle.Flat;
             btnFase5.Click += (s, e) =>
             {
                 if (SimuladorGlobal == null)
@@ -86,14 +106,26 @@ namespace Carrusel_AED.P
                     return;
                 }
 
-                StoryBuilder builder = new StoryBuilder();
-                builder.ConstruirHistoria(SimuladorGlobal.ColaGuardado);
+                builderGlobal = new StoryBuilder();
+                builderGlobal.ConstruirHistoria(SimuladorGlobal.ColaGuardado);
 
-                MessageBox.Show("Se armaron " + builder.BicolaPaginas.contador + " páginas.", "Fase 5");
+                MostrarImagenActual();
+
+                if (!string.IsNullOrEmpty(builderGlobal.AudioGlobal))
+                {
+                    AudioPlayer.ReproducirBase64(builderGlobal.AudioGlobal);
+                }
+
+                MessageBox.Show("Se armaron " + builderGlobal.BicolaPaginas.contador + " páginas.", "Fase 5");
+
+                Pagina primerapag = builderGlobal.BicolaPaginas.Frente.Dato;
+                MessageBox.Show("la primera pagina tiene texto:" + (primerapag.Texto != "" ? "SI" : "NO") + "\n la primera pagina tiene iamgen " + (primerapag.ImagenActual != null ? "Si" : "NO"));
+
             };
             this.Controls.Add(btnFase5);
         }
 
+        //fase 1
         private void CargarArchivo()
         {
             try
@@ -108,6 +140,7 @@ namespace Carrusel_AED.P
             }
         }
 
+        //fase 2
         private void ProcesarYEncolar()
         {
             if (string.IsNullOrEmpty(contenidoArchivoCompleto))
@@ -129,7 +162,7 @@ namespace Carrusel_AED.P
 
 
         }
-
+        //fase 3
         private void EjecutarRoundRobin()
         {
             // Limpiamos todo y llenamos de nuevo
@@ -142,5 +175,58 @@ namespace Carrusel_AED.P
 
             MessageBox.Show("Guardados " + SimuladorGlobal.ColaGuardado.Contador + " | Eliminados: " + SimuladorGlobal.ColaEliminados.Contador, "completado! ");
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (builderGlobal == null || builderGlobal.BicolaPaginas.contador <= 1) return;
+
+            Pagina pag = builderGlobal.BicolaPaginas.ExtraerFinal();
+            builderGlobal.BicolaPaginas.InsertarFrente(pag);
+
+            MostrarImagenActual();
+        }
+
+        private void MostrarImagenActual()
+        {
+            if (builderGlobal == null || builderGlobal.BicolaPaginas.contador == 0) return;
+
+            Pagina pag = builderGlobal.BicolaPaginas.Frente.Dato;
+
+            if (pag != null)
+            {
+                label1.Text = pag.Texto;
+
+                if (pag.ImagenActual == null)
+                {
+                    MessageBox.Show("la imagen es nula, el extractor no la guardo bien");
+                    PictureBox1.Image = null;
+                }
+                else
+                {
+                    PictureBox1.Image = pag.ImagenActual;
+                }
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (builderGlobal == null || builderGlobal.BicolaPaginas.contador <= 1) return;
+
+            Pagina pag = builderGlobal.BicolaPaginas.ExtraerFrente();
+            builderGlobal.BicolaPaginas.InsertarFinal(pag);
+
+            MostrarImagenActual();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            AudioPlayer.Detener();
+        }
     }
+
 }

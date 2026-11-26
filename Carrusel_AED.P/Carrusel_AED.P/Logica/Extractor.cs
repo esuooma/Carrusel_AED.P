@@ -39,7 +39,7 @@ namespace Carrusel_AED.P.Logica
                     // Desapilamos de forma segura
                     if (!pila.vacia()) pila.DesApilar();
 
-                    string texto = sb.ToString().Trim().ToUpper();
+                    string texto = sb.ToString().Trim();
 
                     // Dependiendo de qué bloque cerramos, guardamos el dato
                     if (enBloque == '[')
@@ -54,39 +54,50 @@ namespace Carrusel_AED.P.Logica
                     }
                     else if (enBloque == '{')
                     {
-                        // Adentro de las llaves viene el PAYLOAD (Mensaje)
-                        payload = texto;
+                        int inicio = linea.IndexOf('{');
+                        int fin = linea.IndexOf('}');
+
+                        if (inicio != -1 && fin > inicio)
+                        {
+                            payload = linea.Substring(inicio + 1, fin - inicio - 1);
+                            payload = payload.Replace("\n", "").Replace("\r", "").Trim(); 
+
+                            if(operacion == "IMAGEN")
+                            {
+                                payload = payload.Replace(" ", ""); 
+                            }
+                        }
                     }
 
                     enBloque = ' '; // Reiniciamos el bloque
-                }
-                else if (c == '<')
+            }
+            else if (c == '<')
+            {
+                // Si abre el símbolo de operación
+                leyendoOperacion = true;
+                sb.Clear();
+            }
+            else if (c == '>')
+            {
+                // Si cierra el símbolo de operación
+                operacion = sb.ToString().Trim().ToUpper();
+                leyendoOperacion = false;
+            }
+            else
+            {
+                // Si no es un delimitador, guardamos la letra
+                if (enBloque != ' ')
                 {
-                    // Si abre el símbolo de operación
-                    leyendoOperacion = true;
-                    sb.Clear();
+                    sb.Append(c);
                 }
-                else if (c == '>')
+                else if (leyendoOperacion)
                 {
-                    // Si cierra el símbolo de operación
-                    operacion = sb.ToString().Trim().ToUpper();
-                    leyendoOperacion = false;
-                }
-                else
-                {
-                    // Si no es un delimitador, guardamos la letra
-                    if (enBloque != ' ')
-                    {
-                        sb.Append(c);
-                    }
-                    else if (leyendoOperacion)
-                    {
-                        sb.Append(c);
-                    }
+                    sb.Append(c);
                 }
             }
-
-            return new Registro(id, canal, operacion, payload);
         }
+
+        return new Registro(id, canal, operacion, payload);
     }
+}
 }

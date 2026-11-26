@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Carrusel_AED.P.Modelos;
+using Carrusel_AED.P.TDAs;
+using System;
 using System.Text;
 using System.Web;
-using Carrusel_AED.P.Modelos;
-using Carrusel_AED.P.TDAs;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Carrusel_AED.P.Logica
 {
@@ -15,7 +16,7 @@ namespace Carrusel_AED.P.Logica
         {
             BicolaPaginas = new Bicola<Pagina>();
             AudioGlobal = "";
-            
+
         }
 
         public void ConstruirHistoria(ColaConBicola<Registro> colaGuardado)
@@ -40,11 +41,19 @@ namespace Carrusel_AED.P.Logica
                 }
                 else if (op.Contains("TEXTO"))
                 {
+
                     // 1. Desencriptar el texto con la Pila
                     PilaConBicola<char> pilaTexto = new PilaConBicola<char>();
                     string textoDesencriptado = "";
+
                     foreach (char letra in reg.Payload) pilaTexto.Apilar(letra);
                     while (!pilaTexto.vacia()) textoDesencriptado += pilaTexto.DesApilar();
+
+                    if (string.IsNullOrEmpty(base64ImagenActual))
+                    {
+                        string muestra = base64ImagenActual.Length > 50 ? base64ImagenActual.Substring(0, 50) : base64ImagenActual;
+                    }
+
 
                     // 2. Crear la nueva página con la imagen que se venía guardando y el texto
                     Pagina nuevaPagina = new Pagina();
@@ -61,7 +70,9 @@ namespace Carrusel_AED.P.Logica
                 }
             }
         }
-
-
     }
 }
+
+
+
+

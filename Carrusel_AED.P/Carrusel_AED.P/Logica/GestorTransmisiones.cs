@@ -13,46 +13,34 @@ namespace Carrusel_AED.P.Logica
         public ColaConBicola<Registro> Canal2 { get; private set; }
         public ColaConBicola<Registro> Canal3 { get; private set; }
 
-        public GestorTransmisiones()
-        {
-            Canal1 = new ColaConBicola<Registro>();
-            Canal2 = new ColaConBicola<Registro>();
-            Canal3 = new ColaConBicola<Registro>();
-        }
-
         public void ProcesarTexto(string contenidoArchivo)
         {
-            // Limpiamos por si se procesa dos veces
             Canal1 = new ColaConBicola<Registro>();
             Canal2 = new ColaConBicola<Registro>();
             Canal3 = new ColaConBicola<Registro>();
 
             Extractor extractor = new Extractor();
-            string[] lineas = contenidoArchivo.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
-            int error = 0; 
-            
+
+            // 1. Reemplazamos los saltos de línea que estén DENTRO de las llaves {}
+            // Esto une la imagen en una sola línea antes de procesarla
+            string contenidoLimpio = System.Text.RegularExpressions.Regex.Replace(contenidoArchivo, @"\{[^}]*\}", m => m.Value.Replace("\r", "").Replace("\n", ""));
+
+            // 2. Ahora sí, dividimos por líneas (que ya no tendrán imágenes rotas)
+            string[] lineas = contenidoLimpio.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (string linea in lineas)
             {
                 try
                 {
                     Registro reg = extractor.ExtraerRegistro(linea);
+
                     if (reg.Canal == 1) Canal1.Encolar(reg);
                     else if (reg.Canal == 2) Canal2.Encolar(reg);
                     else Canal3.Encolar(reg);
                 }
-                catch (Exception)
-                {
-                    error++;
-                }
-                
-            }
-            if (error > 0)
-            {
-                System.Windows.Forms.MessageBox.Show("Hubo " + error + " errores al procesar líneas. Revisa el formato del TXT.");
+                catch { }
             }
         }
-       
     }
    
 }
