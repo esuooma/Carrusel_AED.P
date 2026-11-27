@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-
+//fase 1
 namespace Carrusel_AED.P.Logica
 {
     public class LectorArchivo

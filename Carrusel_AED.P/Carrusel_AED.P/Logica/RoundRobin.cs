@@ -1,7 +1,6 @@
 ﻿using Carrusel_AED.P.Modelos;
 using Carrusel_AED.P.TDAs;
 using System;
-using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 
 namespace Carrusel_AED.P.Logica
@@ -17,7 +16,7 @@ namespace Carrusel_AED.P.Logica
             ColaEliminados = new ColaConBicola<Registro>();
         }
 
-        // recibe las colas para mostrar el contenido descartable y guardado
+        // recibe las colas para mostrar el contenido guardado
         public void EjecutarSimulacion(ColaConBicola<Registro> canal1, ColaConBicola<Registro> canal2, ColaConBicola<Registro> canal3)
         {
             int turno = 1;
@@ -62,12 +61,12 @@ namespace Carrusel_AED.P.Logica
                 }
             }
 
-            System.Windows.Forms.MessageBox.Show("El bucle while sacó un total de: " + procesados + " registros de los canales.");
+            System.Windows.Forms.MessageBox.Show("La funcion sacó un total de: " + procesados + " registros de los canales.");
         }
 
         private void ProcesarRegistro(Registro reg)
         {
-            // Si por alguna razon la operacion viene nula, la forzamos a vacio
+            // Si por alguna razon la operacion viene nula.
             string op = reg.Operacion != null ? reg.Operacion : "";
 
             if (op.Contains("AUDIO") || op.Contains("IMAGEN") || op.Contains("TEXTO"))

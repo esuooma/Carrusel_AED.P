@@ -33,40 +33,40 @@ namespace Carrusel_AED.P
         {
             // Botón 1: Leer
             Button btnCargar = new Button();
-            btnCargar.Text = "1. Cargar TXT";
+            btnCargar.Text = "1.Cargar ";
             btnCargar.Location = new System.Drawing.Point(135, 20);
-            btnCargar.BackColor = System.Drawing.Color.FromArgb(50, 50, 50);
-            btnCargar.ForeColor = System.Drawing.Color.White;
+            btnCargar.BackColor = System.Drawing.Color.FromArgb(220, 220, 220);
+            btnCargar.ForeColor = System.Drawing.Color.Black;
             btnCargar.FlatStyle = FlatStyle.Flat;
             btnCargar.Click += (s, e) => CargarArchivo();
             this.Controls.Add(btnCargar);
 
             // Botón 2: Procesar
             Button btnProcesar = new Button();
-            btnProcesar.Text = "Fase.2";
+            btnProcesar.Text = "2.Canales";
             btnProcesar.Location = new System.Drawing.Point(255, 20);
-            btnProcesar.BackColor = System.Drawing.Color.FromArgb(50, 50, 50);
-            btnProcesar.ForeColor = System.Drawing.Color.White;
+            btnProcesar.BackColor = System.Drawing.Color.FromArgb(220, 220, 220);
+            btnProcesar.ForeColor = System.Drawing.Color.Black;
             btnProcesar.FlatStyle = FlatStyle.Flat;
             btnProcesar.Click += (s, e) => ProcesarYEncolar();
             this.Controls.Add(btnProcesar);
 
             // Botón 3: Round Robin
             Button btnRoundRobin = new Button();
-            btnRoundRobin.Text = "Fase.3";
+            btnRoundRobin.Text = "3.RoundRobin";
             btnRoundRobin.Location = new System.Drawing.Point(375, 20);
-            btnRoundRobin.BackColor = System.Drawing.Color.FromArgb(50, 50, 50);
-            btnRoundRobin.ForeColor = System.Drawing.Color.White;
+            btnRoundRobin.BackColor = System.Drawing.Color.FromArgb(220, 220, 220);
+            btnRoundRobin.ForeColor = System.Drawing.Color.Black;
             btnRoundRobin.FlatStyle = FlatStyle.Flat;
             btnRoundRobin.Click += (s, e) => EjecutarRoundRobin();
             this.Controls.Add(btnRoundRobin);
 
             // Botón 4: Destruir
             Button btnDestruir = new Button();
-            btnDestruir.Text = "4. Destruir Eliminados";
+            btnDestruir.Text = "4.Destruir ";
             btnDestruir.Location = new System.Drawing.Point(495, 20);
-            btnDestruir.BackColor = System.Drawing.Color.FromArgb(50, 50, 50);
-            btnDestruir.ForeColor = System.Drawing.Color.White;
+            btnDestruir.BackColor = System.Drawing.Color.FromArgb(220, 220, 220);
+            btnDestruir.ForeColor = System.Drawing.Color.Black;
             btnDestruir.FlatStyle = FlatStyle.Flat;
             btnDestruir.Click += (s, e) =>
             {
@@ -93,10 +93,10 @@ namespace Carrusel_AED.P
 
             //fase 5 boton armar pagina
             Button btnFase5 = new Button();
-            btnFase5.Text = "5. Armar Páginas";
+            btnFase5.Text = "5.StoryBuilder";
             btnFase5.Location = new System.Drawing.Point(615, 20);
-            btnFase5.BackColor = System.Drawing.Color.FromArgb(50, 50, 50);
-            btnFase5.ForeColor = System.Drawing.Color.White;
+            btnFase5.BackColor = System.Drawing.Color.FromArgb(220, 220, 220);
+            btnFase5.ForeColor = System.Drawing.Color.Black;
             btnFase5.FlatStyle = FlatStyle.Flat;
             btnFase5.Click += (s, e) =>
             {
@@ -119,7 +119,6 @@ namespace Carrusel_AED.P
                 MessageBox.Show("Se armaron " + builderGlobal.BicolaPaginas.contador + " páginas.", "Fase 5");
 
                 Pagina primerapag = builderGlobal.BicolaPaginas.Frente.Dato;
-                MessageBox.Show("la primera pagina tiene texto:" + (primerapag.Texto != "" ? "SI" : "NO") + "\n la primera pagina tiene iamgen " + (primerapag.ImagenActual != null ? "Si" : "NO"));
 
             };
             this.Controls.Add(btnFase5);
@@ -149,7 +148,6 @@ namespace Carrusel_AED.P
                 return;
             }
 
-            // Le pasamos el texto a (GestorTransmisiones)
             Gestor.ProcesarTexto(contenidoArchivoCompleto);
 
             // Mostramos el resultado 
@@ -165,16 +163,34 @@ namespace Carrusel_AED.P
         //fase 3
         private void EjecutarRoundRobin()
         {
-            // Limpiamos todo y llenamos de nuevo
-            Gestor = new GestorTransmisiones();
-            Gestor.ProcesarTexto(contenidoArchivoCompleto);
+            if (Gestor == null)
+            {
+                MessageBox.Show("No hay datos debes cargar primero el archivo (boton1) ");
+                return; 
+            }
+            if ( (Gestor.Canal1.vacia() && Gestor.Canal2.vacia() && Gestor.Canal3.vacia()))
+             {
+                MessageBox.Show("No hay datos procesados, haz click en la en (Canales) primero", "secuencia incorrecta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+             
+            }
+            try
+            {
+                Gestor = new GestorTransmisiones();
+                Gestor.ProcesarTexto(contenidoArchivoCompleto);
 
-            //Fase 4
-            SimuladorGlobal = new RoundRobin();
-            SimuladorGlobal.EjecutarSimulacion(Gestor.Canal1, Gestor.Canal2, Gestor.Canal3);
+                //Fase 4
+                SimuladorGlobal = new RoundRobin();
+                SimuladorGlobal.EjecutarSimulacion(Gestor.Canal1, Gestor.Canal2, Gestor.Canal3);
 
-            MessageBox.Show("Guardados " + SimuladorGlobal.ColaGuardado.Contador + " | Eliminados: " + SimuladorGlobal.ColaEliminados.Contador, "completado! ");
+                MessageBox.Show("Guardados " + SimuladorGlobal.ColaGuardado.Contador + " | Eliminados: " + SimuladorGlobal.ColaEliminados.Contador, "completado! ");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ocurrió un error inesperado al procesar el Round-Robin: " + ex.Message);
+            }
         }
+
 
         private void button2_Click(object sender, EventArgs e)
         {

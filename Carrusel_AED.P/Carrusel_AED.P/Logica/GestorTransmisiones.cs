@@ -2,8 +2,7 @@
 using Carrusel_AED.P.TDAs;
 using System;
 using System.Linq.Expressions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
+//fase2 
 namespace Carrusel_AED.P.Logica
 {
     public class GestorTransmisiones
@@ -21,11 +20,10 @@ namespace Carrusel_AED.P.Logica
 
             Extractor extractor = new Extractor();
 
-            // 1. Reemplazamos los saltos de línea que estén DENTRO de las llaves {}
-            // Esto une la imagen en una sola línea antes de procesarla
+            
             string contenidoLimpio = System.Text.RegularExpressions.Regex.Replace(contenidoArchivo, @"\{[^}]*\}", m => m.Value.Replace("\r", "").Replace("\n", ""));
 
-            // 2. Ahora sí, dividimos por líneas (que ya no tendrán imágenes rotas)
+            
             string[] lineas = contenidoLimpio.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (string linea in lineas)

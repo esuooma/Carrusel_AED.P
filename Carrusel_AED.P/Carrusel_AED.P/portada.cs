@@ -25,5 +25,15 @@ namespace Carrusel_AED.P
 
             this.Close(); // Cuando cierres el Form1, se cierra el programa
         }
+
+        private void portada_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -14,7 +14,7 @@ namespace Carrusel_AED.P.Logica
                 return new Registro("000", 1, "DESCONOCIDA", "");
             }
             string id = "000";
-            int canal = 1; // Por defecto
+            int canal = 1; 
             string operacion = "DESCONOCIDA";
             string payload = "";
 
@@ -36,20 +36,20 @@ namespace Carrusel_AED.P.Logica
                 }
                 else if (c == ']' || c == ')' || c == '}')
                 {
-                    // Desapilamos de forma segura
+                    // Desapilamos 
                     if (!pila.vacia()) pila.DesApilar();
 
                     string texto = sb.ToString().Trim();
 
-                    // Dependiendo de qué bloque cerramos, guardamos el dato
+                    //  guardamos el dato
                     if (enBloque == '[')
                     {
-                        // Asumimos que adentro del corchete viene el CANAL
+                        // se asume que adentro del corchete viene el CANAL
                         int.TryParse(texto, out canal);
                     }
                     else if (enBloque == '(')
                     {
-                        // Asumimos que adentro del paréntesis viene el ID
+                        // se asume que adentro del paréntesis viene el ID
                         id = texto;
                     }
                     else if (enBloque == '{')

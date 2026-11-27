@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(portada));
             button1 = new Button();
             label1 = new Label();
             label2 = new Label();
@@ -38,7 +39,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(200, 288);
+            button1.Location = new Point(200, 279);
             button1.Name = "button1";
             button1.Size = new Size(75, 23);
             button1.TabIndex = 0;
@@ -49,10 +50,12 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Font = new Font("Times New Roman", 12F, FontStyle.Italic, GraphicsUnit.Point, 0);
-            label1.Location = new Point(54, 87);
+            label1.BackColor = Color.Transparent;
+            label1.Font = new Font("Consolas", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.ForeColor = Color.White;
+            label1.Location = new Point(28, 86);
             label1.Name = "label1";
-            label1.Size = new Size(371, 95);
+            label1.Size = new Size(430, 110);
             label1.TabIndex = 1;
             label1.Text = "UNIVERSIDAD DE ORIENTE \r\nESCUELA DE INGENIERIA Y CIENCIAS APLICADAS\r\nDEPARTAMENTO DE INFORMATICA\r\nALGORITMOS Y ESTRUCTURAS DE DATOS III\r\nPROFESOR : DIEGO TINEO\r\n";
             label1.TextAlign = ContentAlignment.MiddleCenter;
@@ -60,25 +63,29 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.BackColor = SystemColors.ButtonFace;
-            label2.Font = new Font("Times New Roman", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label2.ForeColor = Color.Crimson;
-            label2.Location = new Point(153, 213);
+            label2.BackColor = Color.Transparent;
+            label2.Font = new Font("Consolas", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label2.ForeColor = Color.FromArgb(255, 192, 255);
+            label2.Location = new Point(160, 223);
             label2.Name = "label2";
-            label2.Size = new Size(170, 38);
+            label2.Size = new Size(153, 38);
             label2.TabIndex = 2;
             label2.Text = "PROYECTO #1\r\nARCHIVOS LEONIDA";
             label2.TextAlign = ContentAlignment.MiddleCenter;
+            label2.Click += label2_Click;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Font = new Font("Times New Roman", 9.75F, FontStyle.Italic, GraphicsUnit.Point, 0);
-            label3.Location = new Point(153, 329);
+            label3.BackColor = Color.Transparent;
+            label3.Font = new Font("Consolas", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label3.ForeColor = Color.White;
+            label3.Location = new Point(104, 327);
             label3.Name = "label3";
-            label3.Size = new Size(192, 45);
+            label3.Size = new Size(270, 57);
             label3.TabIndex = 3;
-            label3.Text = "             INTEGRANTES\r\nJESUS SUARES. C.I 31.598.839\r\nSAMUEL BERRIO. C.I 32.051.584\r\n";
+            label3.Text = "INTEGRANTES\r\nJESUS SUARES. C.I 31.598.839\r\nSAMUEL BERRIO. C.I 32.051.584\r\n";
+            label3.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // pictureBox1
             // 
@@ -94,15 +101,19 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            AutoValidate = AutoValidate.EnablePreventFocusChange;
+            BackColor = SystemColors.AppWorkspace;
+            BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             ClientSize = new Size(487, 405);
             Controls.Add(pictureBox1);
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(button1);
-            ForeColor = Color.Brown;
+            ForeColor = Color.Black;
             Name = "portada";
             Text = "CARRUSEL - AED III";
+            Load += portada_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             PictureBox1 = new PictureBox();
             label1 = new Label();
             Anterior = new Button();
@@ -37,8 +38,7 @@
             // 
             // PictureBox1
             // 
-            PictureBox1.BorderStyle = BorderStyle.FixedSingle;
-            PictureBox1.Location = new Point(229, 109);
+            PictureBox1.Location = new Point(239, 97);
             PictureBox1.Name = "PictureBox1";
             PictureBox1.Size = new Size(384, 284);
             PictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
@@ -47,9 +47,10 @@
             // 
             // label1
             // 
-            label1.Font = new Font("Courier New", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.ForeColor = Color.Lime;
-            label1.Location = new Point(24, 412);
+            label1.BackColor = Color.Transparent;
+            label1.Font = new Font("Consolas", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.ForeColor = SystemColors.ActiveCaptionText;
+            label1.Location = new Point(36, 384);
             label1.MaximumSize = new Size(800, 150);
             label1.Name = "label1";
             label1.Size = new Size(788, 150);
@@ -59,27 +60,29 @@
             // 
             // Anterior
             // 
-            Anterior.BackColor = Color.FromArgb(103, 103, 103);
+            Anterior.BackColor = Color.Transparent;
             Anterior.FlatStyle = FlatStyle.Flat;
-            Anterior.ForeColor = SystemColors.ButtonHighlight;
-            Anterior.Location = new Point(86, 257);
+            Anterior.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Anterior.ForeColor = Color.White;
+            Anterior.Location = new Point(87, 244);
             Anterior.Name = "Anterior";
-            Anterior.Size = new Size(75, 23);
+            Anterior.Size = new Size(86, 31);
             Anterior.TabIndex = 3;
-            Anterior.Text = "←";
+            Anterior.Text = "◀";
             Anterior.UseVisualStyleBackColor = false;
             Anterior.Click += button2_Click;
             // 
             // Siguiente
             // 
-            Siguiente.BackColor = Color.FromArgb(95, 95, 95);
+            Siguiente.BackColor = Color.Transparent;
             Siguiente.FlatStyle = FlatStyle.Flat;
+            Siguiente.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Siguiente.ForeColor = Color.White;
-            Siguiente.Location = new Point(649, 257);
+            Siguiente.Location = new Point(673, 235);
             Siguiente.Name = "Siguiente";
-            Siguiente.Size = new Size(75, 23);
+            Siguiente.Size = new Size(86, 31);
             Siguiente.TabIndex = 2;
-            Siguiente.Text = "→";
+            Siguiente.Text = "▶";
             Siguiente.UseVisualStyleBackColor = false;
             Siguiente.Click += button1_Click;
             // 
@@ -87,14 +90,16 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.FromArgb(68, 68, 68);
-            ClientSize = new Size(849, 571);
+            BackColor = Color.Black;
+            BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
+            BackgroundImageLayout = ImageLayout.Stretch;
+            ClientSize = new Size(847, 571);
             Controls.Add(Anterior);
             Controls.Add(Siguiente);
             Controls.Add(label1);
             Controls.Add(PictureBox1);
             Name = "Form1";
-            Text = "Form1";
+            Text = "Carrusel_AED_III";
             FormClosing += Form1_FormClosing;
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)PictureBox1).EndInit();

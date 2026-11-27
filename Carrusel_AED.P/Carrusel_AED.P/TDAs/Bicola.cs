@@ -38,7 +38,7 @@ namespace Carrusel_AED.P.TDAs
             contador++;
         }
 
-        // insertar frente (para la pila)
+        // insertar frente 
 
         public void InsertarFrente(T dato)
         {

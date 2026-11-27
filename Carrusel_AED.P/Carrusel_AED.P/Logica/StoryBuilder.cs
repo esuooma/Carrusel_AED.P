@@ -3,7 +3,6 @@ using Carrusel_AED.P.TDAs;
 using System;
 using System.Text;
 using System.Web;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Carrusel_AED.P.Logica
 {

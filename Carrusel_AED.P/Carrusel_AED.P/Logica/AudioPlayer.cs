@@ -3,7 +3,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-// Compatible desde .NET Framework 4.x hasta .NET 10 — CERO paquetes NuGet
+// codigo del profesor
 public static class AudioPlayer
 {
     [DllImport("winmm.dll")]
